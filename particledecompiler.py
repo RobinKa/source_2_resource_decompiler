@@ -160,7 +160,7 @@ class ParticleDecompiler(ResourceDecompiler):
         self.current_section = None
         self.particle_def_count = 0
         self.visibility_inputs = False
-        self.model_ref = True
+        self.model_ref = False
         self.next_close_curly_comma = False
  
         start_found = False
