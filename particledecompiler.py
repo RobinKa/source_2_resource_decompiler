@@ -13,7 +13,8 @@ class ParticleDecompiler(ResourceDecompiler):
         "Vector": "float(3)",
         "Color": "uint(4)",
         "Vector4D": "float(4)",
-        "QAngle": "float(3)"
+        "QAngle": "float(3)",
+        "fltx4": "float(4)"
     }
 
     def write_output(self, s):
@@ -93,13 +94,13 @@ class ParticleDecompiler(ResourceDecompiler):
         self.write_to_section = True
         
     def handle_open_bracket(self, tokens):
-        self.output_data += "[\n"
+        self.write_output_line("[")
         
     def handle_close_bracket(self, tokens):
-        self.output_data += "]\n"
+        self.write_output_line("]")
         
     def handle_open_curly(self, tokens):
-        if self.visibility_inputs:
+        if self.visibility_inputs or self.model_ref:
             self.write_output_line("{")
         else:
             #Ignores curlies when writing to sections
@@ -110,6 +111,9 @@ class ParticleDecompiler(ResourceDecompiler):
         if self.visibility_inputs:
             self.write_output_line("}")
             self.visibility_inputs = False
+        elif self.model_ref:
+            self.write_output_line("}")
+            self.model_ref = False
         else:
             if not self.write_to_section:
                 #Write a comma after if its set
@@ -138,6 +142,13 @@ class ParticleDecompiler(ResourceDecompiler):
         enum_int = int(tokens[6].replace("}", ""))
         self.write_output_line("symbol " + tokens[1] + " = " + str(enum_int))
         
+    def handle_model_reference(self, tokens):
+        self.write_output_line(tokens[0]) #ModelReference_t
+        self.model_ref = True
+        self.struct_count -= 1
+        if self.struct_count > 0:
+            self.next_close_curly_comma = True
+        
     def read_external_ref(self, tokens):
         self.external_refs[tokens[0]] = tokens[1]
         
@@ -149,6 +160,7 @@ class ParticleDecompiler(ResourceDecompiler):
         self.current_section = None
         self.particle_def_count = 0
         self.visibility_inputs = False
+        self.model_ref = True
         self.next_close_curly_comma = False
  
         start_found = False
@@ -206,6 +218,8 @@ class ParticleDecompiler(ResourceDecompiler):
                 self.handle_particle_children_info(tokens)
             elif tokens[0] == "Enum":
                 self.handle_enum(tokens)
+            elif tokens[0] == "ModelReference_t":
+                self.handle_model_reference(tokens)
             else:
                 print("WARNING: Unprocessed line: " + line)
                 
