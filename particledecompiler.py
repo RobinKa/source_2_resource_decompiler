@@ -13,8 +13,7 @@ class ParticleDecompiler(ResourceDecompiler):
         "Vector": "float(3)",
         "Color": "uint(4)",
         "Vector4D": "float(4)",
-        "QAngle": "float(3)",
-        "fltx4": "float(4)"
+        "QAngle": "float(3)"
     }
 
     def write_output(self, s):
@@ -33,6 +32,10 @@ class ParticleDecompiler(ResourceDecompiler):
     def handle_variable(self, tokens):
         tokens[0] = self.var_types[tokens[0]]
         self.write_output_list(tokens)
+        
+    def handle_fltx4(self, tokens):
+        val = tokens[3].replace("(", "").split(",")[0]
+        self.write_output_line("float " + tokens[1] + " = " + val)
         
     def handle_char_array(self, tokens):
         tokens[0] = "string"
@@ -202,6 +205,8 @@ class ParticleDecompiler(ResourceDecompiler):
                 self.handle_variable(tokens)
             elif tokens[0].startswith("char["):
                 self.handle_char_array(tokens)
+            elif tokens[0] == "fltx4":
+                self.handle_fltx4(tokens)
             elif tokens[0] == "CResourceString":
                 self.handle_resource_string(tokens)
             elif tokens[0] == "Struct":
