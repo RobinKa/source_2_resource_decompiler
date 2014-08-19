@@ -21,6 +21,10 @@ How to use:
   if you dont specify an output file path it will put it into your current work directory with the input file name + _decompiled.txt
 - Now you can rename the decompiled file to somename.vpcf and put it into the content folder of your addon \o/
 
+Useful:
+--------------
+- You can use python resdec.py Path/To/Directory/* to decompile all files that end with _c in that directory
+- If you save the decompiled file with the editor it will indent it correctly
 
 
 **You can contact me for any reasons at toraxxx@warlockbrawl.com**
