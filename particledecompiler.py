@@ -12,7 +12,8 @@ class ParticleDecompiler(ResourceDecompiler):
         "int32": "int",
         "Vector": "float(3)",
         "Color": "uint(4)",
-        "Vector4D": "float(4)"
+        "Vector4D": "float(4)",
+        "QAngle": "float(3)"
     }
 
     def write_output(self, s):
