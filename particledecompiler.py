@@ -179,7 +179,7 @@ class ParticleDecompiler(ResourceDecompiler):
                     tokens = line.split(" ")
                     
                     if(tokens[0] == "Id:" and tokens[1] == "Resource" and tokens[2] == "Name:"):
-                        print("Resource reference table head")
+                        read_refs = True
                     elif len(tokens) != 2:
                         read_refs = False
                     else:
