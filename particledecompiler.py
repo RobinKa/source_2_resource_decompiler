@@ -55,9 +55,9 @@ class ParticleDecompiler(ResourceDecompiler):
         self.write_output_line("\"")
         
     def handle_struct(self, tokens):
-        if len(tokens) == 4 and tokens[3] == "CParticleVisibilityInputs":
-            self.write_output_line("CParticleVisibilityInputs " + tokens[1] + " = CParticleVisibilityInputs")
-            self.visibility_inputs = True
+        if len(tokens) == 4 and (tokens[3] == "CParticleVisibilityInputs" or tokens[3] == "CPathParameters"):
+            self.write_output_line(tokens[3] + " " + tokens[1] + " = " + tokens[3])
+            self.in_section_struct = True
         else:
             #Names are like m_Children[0] so split before the [
             a = tokens[1].split("[")
@@ -103,7 +103,7 @@ class ParticleDecompiler(ResourceDecompiler):
         self.write_output_line("]")
         
     def handle_open_curly(self, tokens):
-        if self.visibility_inputs or self.model_ref:
+        if self.in_section_struct or self.model_ref:
             self.write_output_line("{")
         else:
             #Ignores curlies when writing to sections
@@ -111,9 +111,9 @@ class ParticleDecompiler(ResourceDecompiler):
                 self.write_output_line("{")
             
     def handle_close_curly(self, tokens):
-        if self.visibility_inputs:
+        if self.in_section_struct:
             self.write_output_line("}")
-            self.visibility_inputs = False
+            self.in_section_struct = False
         elif self.model_ref:
             self.write_output_line("}")
             self.model_ref = False
@@ -162,7 +162,7 @@ class ParticleDecompiler(ResourceDecompiler):
         self.write_to_section = False
         self.current_section = None
         self.particle_def_count = 0
-        self.visibility_inputs = False
+        self.in_section_struct = False
         self.model_ref = False
         self.next_close_curly_comma = False
  

@@ -19,7 +19,7 @@ def decompile_file(args):
         
     #Create the output directory if it doesnt exist yet
     output_dir = os.path.dirname(out_path)
-    if not os.path.isdir(output_dir):
+    if output_dir != "" and not os.path.isdir(output_dir):
         print("Directory didnt exist: " + output_dir)
         return
 
@@ -82,7 +82,7 @@ def main():
         if len(sys.argv) == 3:
             output_name = sys.argv[2]
         else:
-            output_name = os.path.basename(file_name) + ext[:-2]
+            output_name = os.path.basename(file_name)[:-2]
     
         decompile_file((file_name, output_name))
        
