@@ -35,4 +35,4 @@ Useful:
 
 All Dota2 particles decompiled (20.08.2014)
 --------------
-http://www.warlockbrawl.com/dota/particles.zip
+http://toraxxx.d2modd.in/
